@@ -20,7 +20,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.cyan,
+    
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -34,7 +34,7 @@ class LoginView extends StatelessWidget {
                   "Login Account",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                   ),
@@ -50,7 +50,7 @@ class LoginView extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               TextFormField(
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(),
                 obscureText: true,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: _buildInputDecoration("Password", Icons.lock),
@@ -61,7 +61,7 @@ class LoginView extends StatelessWidget {
                 height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                   onPressed: _submitForm,
                   child: const Text("Login", style: TextStyle(fontSize: 20)),
                 ),
