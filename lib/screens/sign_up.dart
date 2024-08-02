@@ -1,125 +1,224 @@
+
 import 'package:flutter/material.dart';
+import 'package:tracker/screens/homescreen.dart';
 import 'package:tracker/screens/login_screen.dart';
-import 'package:tracker/utils/appvalidator.dart';
+import 'package:tracker/services/firebase_services.dart';
 
-class SignUpView extends StatelessWidget {
-  SignUpView({super.key});
-
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-
-  void _submitForm() {
-    if (_formkey.currentState!.validate()) {
-      ScaffoldMessenger.of(_formkey.currentContext!).showSnackBar(
-        const SnackBar(content: Text('Form submitted successfully')),
-      );
-    }
-  }
-
-  final appValidator = AppValidator();
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _passwordtwo = TextEditingController();
+  @override
   Widget build(BuildContext context) {
+    var media = MediaQuery.of(context).size;
+    var height = media.height;
+    var width = media.width;
     return Scaffold(
-      backgroundColor: Colors.cyan,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formkey,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          toolbarHeight: 1,
+        ),
+        body: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 60.0),
-              const SizedBox(
-                width: 250,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Container(
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.arrow_circle_left_outlined,
+                            size: 50,
+                          )),
+                    ),
+                    SizedBox(
+                      width: 140,
+                    ),
+                    Container(
+                      height: 100,
+                      width: 110,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage("assets/kukur.png"),
+                              fit: BoxFit.fitWidth)),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: height * 0.05,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 8, 0),
                 child: Text(
-                  "Create new Account",
-                  textAlign: TextAlign.center,
+                  "Create Account",
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
+                    fontSize: height * 0.040,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const SizedBox(height: 20.0),
-              TextFormField(
-                style: const TextStyle(color: Colors.white),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: _buildInputDecoration("Username", Icons.person),
-                validator: appValidator.validateUsername,
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                style: const TextStyle(color: Colors.white),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: _buildInputDecoration("Email", Icons.email),
-                validator: appValidator.validateEmail,
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                style: const TextStyle(color: Colors.white),
-                keyboardType: TextInputType.phone,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: _buildInputDecoration("Phone number", Icons.call),
-                validator: appValidator.validatePhoneNumber,
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                style: const TextStyle(color: Colors.white),
-                obscureText: true,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: _buildInputDecoration("Password", Icons.lock),
-                validator: appValidator.validatePassword,
-              ),
-              const SizedBox(height: 40.0),
               SizedBox(
-                height: 50,
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
-                  onPressed: _submitForm,
-                  child: const Text("Create", style: TextStyle(fontSize: 20)),
+                height: 30,
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 50, 0),
+                  child: Container(
+                    width: 300,
+                    child: TextFormField(
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                          hintText: "Full Name",
+                          prefixIcon: Icon(Icons.email_outlined)),
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 30.0),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginView()),
-                  );
-                },
-                child: const Text(
-                  "Login",
-                  style: TextStyle(color: Color(0xFFF15900), fontSize: 25),
+              SizedBox(
+                height: 30,
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 50, 0),
+                  child: Container(
+                    width: 300,
+                    child: TextFormField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                          hintText: "Email",
+                          prefixIcon: Icon(Icons.email_outlined)),
+                    ),
+                  ),
                 ),
-              )
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 50, 0),
+                  child: Container(
+                    width: 300,
+                    child: TextFormField(
+                      controller: _passwordController,
+                      keyboardType: TextInputType.visiblePassword,
+                      decoration: InputDecoration(
+                          hintText: "Password", prefixIcon: Icon(Icons.lock)),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 50, 0),
+                  child: Container(
+                    width: 300,
+                    child: TextFormField(
+                      controller: _passwordtwo,
+                      keyboardType: TextInputType.visiblePassword,
+                      decoration: InputDecoration(
+                          hintText: "Confirm Password",
+                          prefixIcon: Icon(Icons.lock)),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(130, 0, 0, 0),
+                  child: Container(
+                    height: height * 0.07,
+                    width: width * 0.325,
+                    decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(13)),
+                    child: Center(
+                      child: InkWell(
+                        onTap: () async {
+                          if (_passwordController.text == _passwordtwo.text) {
+                            try {
+                              await FireBaseAuthService()
+                                  .SignUp(_emailController.text,
+                                      _passwordController.text)
+                                  .then((value) => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (_) => Homescreen())),
+                                      });
+                            } catch (error) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text("Unable to login because of $error"),
+                              ));
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("password not same"),
+                            ));
+                          }
+                        },
+                        child: Text(
+                          "Signup",
+                          style: TextStyle(
+                              fontSize:
+                                  MediaQuery.of(context).size.height * 0.025,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: height * 0.15,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Already have an account?",
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.019),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (_) => SignIn()));
+                    },
+                    child: Text("Sign In",
+                        style: TextStyle(
+                            fontSize:
+                                MediaQuery.of(context).size.height * 0.019,
+                            color: Colors.orange)),
+                  )
+                ],
+              ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  InputDecoration _buildInputDecoration(String label, IconData suffixIcon) {
-    return InputDecoration(
-      fillColor: const Color(0xAA494A59),
-      enabledBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: Color(0x35949494)),
-      ),
-      focusedBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-      ),
-      filled: true,
-      labelStyle: const TextStyle(color: Color(0xFF949494)),
-      labelText: label,
-      suffixIcon: Icon(
-        suffixIcon,
-        color: const Color(0xFF949494),
-      ),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-    );
+        ));
   }
 }

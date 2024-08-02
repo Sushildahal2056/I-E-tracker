@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "653288390660",
-    "project_id": "income-expense-tracker-35683",
-    "storage_bucket": "income-expense-tracker-35683.appspot.com"
+    "project_number": "682334233187",
+    "project_id": "ictproject-ef9cb",
+    "storage_bucket": "ictproject-ef9cb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:653288390660:android:82c62dc78e5e53e0f13551",
+        "mobilesdk_app_id": "1:682334233187:android:03caaa0e802bc111778e56",
         "android_client_info": {
           "package_name": "com.example.tracker"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDNWAHyJOVgOraTMAJfpUNHIIRo-_xSqJ8"
+          "current_key": "AIzaSyCgy_6Mlnd4Q4KpwSKM6Vhky9fOvuiJh9c"
         }
       ],
       "services": {
