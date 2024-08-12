@@ -1,26 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:tracker/screens/sign_up.dart';
+import 'package:tracker/screens/dashboard.dart';
+//import 'package:tracker/screens/sign_up.dart';
+import 'package:tracker/services/auth_service.dart';
 import 'package:tracker/utils/appvalidator.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   LoginView({super.key});
 
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>(); 
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
 
-  void _submitForm() {
+class _LoginViewState extends State<LoginView> {
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>(); 
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  var isLoader = false;
+  var authService = AuthService();
+
+  Future<void> _submitForm() async{
     if (_formkey.currentState!.validate()) {
-      ScaffoldMessenger.of(_formkey.currentContext!).showSnackBar(
-        const SnackBar(content: Text('Form submitted successfully')),
-      );
+       setState(() {
+        isLoader = true; 
+      });
+    var data = {  
+      
+      "email": _emailController.text,
+      "password": _passwordController.text,
+      
+    };
+await authService.login(data, context);
+
+       setState(() {
+        isLoader = false; 
+      });
+      //Sca
     }
   }
 
-  final appValidator = AppValidator();
+  var appValidator = AppValidator();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.cyan,
+      backgroundColor: Color.fromARGB(255, 21, 19, 84),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -42,6 +65,7 @@ class LoginView extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               TextFormField(
+                controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 style: const TextStyle(color: Colors.white),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -50,6 +74,7 @@ class LoginView extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               TextFormField(
+                controller: _passwordController,
                 style: const TextStyle(color: Colors.white),
                 obscureText: true,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -61,22 +86,27 @@ class LoginView extends StatelessWidget {
                 height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
-                  onPressed: _submitForm,
-                  child: const Text("Login", style: TextStyle(fontSize: 20)),
-                ),
-              ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurpleAccent),
+                
+                onPressed: (){
+                  isLoader ? print("Loading") : _submitForm();
+                },
+                 child:isLoader
+                  ? Center(child: CircularProgressIndicator())
+                  :Text("Login",
+                    style: TextStyle(fontSize: 20)))),
               const SizedBox(height: 30.0),
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SignUpView()),
+                    MaterialPageRoute(builder: (context) => Dashboard()),
                   );
                 },
                 child: const Text(
                   "Create new account",
-                  style: TextStyle(color: Color(0xFFF15900), fontSize: 25),
+                  style: TextStyle(color: Color.fromARGB(255, 170, 166, 163), fontSize: 25),
                 ),
               )
             ],

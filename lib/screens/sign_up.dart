@@ -1,26 +1,75 @@
 import 'package:flutter/material.dart';
+//import 'package:tracker/screens/dashboard.dart';
 import 'package:tracker/screens/login_screen.dart';
+import 'package:tracker/services/auth_service.dart';
+//import 'package:tracker/services/auth_service.dart';
 import 'package:tracker/utils/appvalidator.dart';
 
-class SignUpView extends StatelessWidget {
+class SignUpView extends StatefulWidget {
+   /* TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _passwordtwo = TextEditingController();
+
+  TextEditingController _phonenumber = TextEditingController();
+  TextEditingController _username = TextEditingController();*/
+  
+
+
   SignUpView({super.key});
 
+  @override
+  State<SignUpView> createState() => _SignUpViewState();
+}
+
+class _SignUpViewState extends State<SignUpView> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  void _submitForm() {
+  final _userNameController = TextEditingController();
+
+  final _emailController = TextEditingController();
+
+  final _phoneController = TextEditingController();
+
+  final _passwordController = TextEditingController();
+
+  var authService = AuthService();
+  var isLoader = false;
+
+  Future<void> _submitForm() async {
     if (_formkey.currentState!.validate()) {
-      ScaffoldMessenger.of(_formkey.currentContext!).showSnackBar(
-        const SnackBar(content: Text('Form submitted successfully')),
-      );
+      setState(() {
+        isLoader = true; 
+      });
+    var data = {  
+      "username": _userNameController.text,
+      "email": _emailController.text,
+      "password": _passwordController.text,
+      "phone": _phoneController.text,
+      'remainingAmount': 0,
+      'totalCredit': 0,
+      'totalDebit': 0,
+
+    };
+await authService.createUser(data, context);
+  // Navigator.pushReplacement(
+   //   context, 
+   //   MaterialPageRoute(builder: (context) => Dashboard()),
+   //   );
+       setState(() {
+        isLoader = false; 
+      });
+      //ScaffoldMessenger.of(_formkey.currentContext!).showSnackBar(
+       // const SnackBar(content: Text('Form submitted successfully')),
+     // );
     }
   }
 
-  final appValidator = AppValidator();
+  var appValidator = AppValidator();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.cyan,
+      backgroundColor: Color.fromARGB(255, 21, 19, 84),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -42,6 +91,7 @@ class SignUpView extends StatelessWidget {
               ),
               const SizedBox(height: 20.0),
               TextFormField(
+                controller: _userNameController,
                 style: const TextStyle(color: Colors.white),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: _buildInputDecoration("Username", Icons.person),
@@ -49,6 +99,7 @@ class SignUpView extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               TextFormField(
+                controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 style: const TextStyle(color: Colors.white),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -57,31 +108,87 @@ class SignUpView extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               TextFormField(
+                controller: _phoneController,
                 style: const TextStyle(color: Colors.white),
                 keyboardType: TextInputType.phone,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: _buildInputDecoration("Phone number", Icons.call),
                 validator: appValidator.validatePhoneNumber,
               ),
-              const SizedBox(height: 16.0),
+              // const SizedBox(height: 16.0),
               TextFormField(
+                controller: _passwordController,
                 style: const TextStyle(color: Colors.white),
                 obscureText: true,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: _buildInputDecoration("Password", Icons.lock),
-                validator: appValidator.validatePassword,
+                validator: appValidator.validatePassword
               ),
-              const SizedBox(height: 40.0),
-              SizedBox(
+               const SizedBox(height: 40.0),
+               SizedBox(
                 height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
-                  onPressed: _submitForm,
-                  child: const Text("Create", style: TextStyle(fontSize: 20)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurpleAccent),
+                
+                onPressed: (){
+                  isLoader ? print("Loading") : _submitForm();
+                },
+                 child:isLoader
+                  ? Center(child: CircularProgressIndicator())
+                  :Text("Create",
+                    style: TextStyle(fontSize: 20)))),
+                  
+                  
+                  
+               
+              
+            /*  onTap: ()async {
+
+if (_passwordController.text == _passwordtwo.text) {
+                            try {
+                              await AuthService()
+                                  .SignUp(_emailController.text,
+                                      _passwordController.text,
+                                      _username.text,
+                                      int.parse(_phonenumber.text),
+                                  
+                                      )
+                                  .then((value) => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (_) => Homescreen())),
+                                      });
+                            } catch (error) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text("Unable to login because of $error"),
+                              ));
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("password not same"),
+                            ));
+                          }
+                        
+
+
+
+                  
+                },
+                 SizedBox(height:40.0),
+                SizedBox(
+                  height: 50,
+                  width: double.infinity,
+                  child:ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                    onPressed: _submitForm,
+                  child: Text("Create" , style: TextStyle(fontSize: 20),),
                 ),
-              ),
-              const SizedBox(height: 30.0),
+              ),*/
+              SizedBox(height: 30.0),
               TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -89,15 +196,15 @@ class SignUpView extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => LoginView()),
                   );
                 },
-                child: const Text(
+                child:  Text(
                   "Login",
                   style: TextStyle(color: Color(0xFFF15900), fontSize: 25),
                 ),
               )
             ],
-          ),
+          )),
         ),
-      ),
+      
     );
   }
 

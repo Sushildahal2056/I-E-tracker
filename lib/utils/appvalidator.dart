@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 class AppValidator {
    String? validateEmail(value) {
   if (value!.isEmpty){
@@ -29,6 +31,15 @@ class AppValidator {
   String? validateUsername(value){
   if (value!.isEmpty){
     return 'Please enter a username';
+  }
+  
+   
+  
+  return null;
+ }
+ String? IsEmptyCheck(value){
+  if (value!.isEmpty){
+    return 'Please fill Details';
   }
   
    
